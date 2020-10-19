@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'ç',
+      title: '360° Kandy Casa',
       theme: ThemeData(
         primaryColor: Colors.black,
         accentColor: Colors.black,
