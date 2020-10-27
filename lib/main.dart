@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kandy_casa_360/screens/about_us.dart';
 import 'package:kandy_casa_360/screens/reservations.dart';
+import 'package:webview_flutter/platform_interface.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 void main() {
@@ -11,6 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: '360° Kandy Casa',
       theme: ThemeData(
         primaryColor: Colors.black,
@@ -54,6 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    const url = 'https://kandy-casa-test.netlify.app/';
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -73,17 +76,25 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Center(
         child: WebView(
-          initialUrl: 'https://kandy-casa-test.netlify.app/',
+          initialUrl: url,
           gestureNavigationEnabled: false,
           javascriptMode: JavascriptMode.unrestricted,
           onWebViewCreated: (WebViewController c) {
             _webViewController = c;
           },
+          onWebResourceError: (WebResourceError e) {
+            // Scaffold.of(context).showSnackBar(SnackBar(
+            //     content: Text("Please check your internet connectivity")));
+            _webViewController.loadUrl(Uri.dataFromString(
+                    '<html><body><center>Please check your internet connectivity. <br>Click on Home to refresh</center></body></html>',
+                    mimeType: 'text/html')
+                .toString());
+          },
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          _webViewController.reload();
+          _webViewController.loadUrl(url);
         },
         child: Icon(Icons.home_outlined),
       ),
